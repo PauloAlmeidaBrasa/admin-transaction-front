@@ -7,30 +7,32 @@ import { useTransactionList, useDeleteTransaction, formatDate } from "../../hook
 const TransactionList =  () => {
 
   const [searchTerm, setSearchTerm] = useState('')
-  const { data: newsList, isLoading } = useTransactionList();
+  const { data: transactionList, isLoading } = useTransactionList();
 
-  const deleteNews = useDeleteNews();
+  const deleteTransactions = useDeleteTransaction();
 
-  const handleDelete = (newsId) => {
-    if (confirm("Are you sure you want to delete this news?")) {
-      deleteNews.mutate(newsId);
+  const handleDelete = (transactionId) => {
+    if (confirm("Are you sure you want to delete this transaction?")) {
+      deleteTransactions.mutate(transactionId);
     }
   };
 
 
-  let amountNews = newsList?.data?.data?.news
-  let filteredNews
+  let amountTransaction = transactionList?.data?.data || transactionList?.data?.transactions || transactionList?.data
+  let filteredTransaction
+  // console.log("TRANSACTIONS Full Response:", transactionList)
+  // console.log("TRANSACTIONS Data:", amountTransaction)
 
-  if(Array.isArray(amountNews)) {
-      filteredNews = amountNews.filter(item => {
-
-      const titleMatch = item?.title?.toLowerCase().includes(searchTerm.toLowerCase())
-      const textMatch = item?.text?.toLowerCase().includes(searchTerm.toLowerCase())
-      
-      return titleMatch || textMatch
-    })
+  if(amountTransaction && Array.isArray(amountTransaction)) {
+      filteredTransaction = amountTransaction.filter(item => {
+        const cpfMatch = item?.ID_user?.toString().includes(searchTerm)
+        const descMatch = item?.desc_transaction?.toLowerCase().includes(searchTerm.toLowerCase())
+        const userMatch = item?.id_user_transaction?.toString().includes(searchTerm)
+        
+        return cpfMatch || descMatch || userMatch
+      })
   } else {
-    filteredNews = []
+    filteredTransaction = []
   }
 
   if (isLoading) {
@@ -44,13 +46,7 @@ const TransactionList =  () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">News Management</h1>
-        <Link
-          to="/news/create"
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-        >
-          Create News
-        </Link>
+        <h1 className="text-3xl font-bold text-gray-900">Transaction Management</h1>
       </div>
 
       {/* Search Bar */}
@@ -59,7 +55,7 @@ const TransactionList =  () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
           <input
             type="text"
-            placeholder="Search news..."
+            placeholder="Search transaction..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -67,22 +63,31 @@ const TransactionList =  () => {
         </div>
       </div>
 
-      {/* News Table */}
+      {/* transaction Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Title
+                CPF
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                subtitle
+                Data
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                content
+                descrição da transação
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date Created
+                Usuario
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                valor
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Valor em pontos
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
@@ -90,19 +95,32 @@ const TransactionList =  () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredNews.map((item) => (
+            {console.log("Filtered Transactions:", filteredTransaction)}
+            {filteredTransaction.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{item.title}</div>
+                  <div className="text-sm font-medium text-gray-900">{item.ID_user}</div>
                   {/* <div className="text-sm text-gray-500 truncate max-w-xs">
                     {item.content}
                   </div> */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{item.subtitle}</div>
+                  <div className="text-sm font-medium text-gray-900">{item.date_transaction}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{item.text}</div>
+                  <div className="text-sm font-medium text-gray-900">{item.desc_transaction}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{item.id_user_transaction}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{item.value}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{item.value_in_points}</div>
+                </td>
+                 <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-gray-900">{item.status}</div>
                 </td>
                 {/* <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
@@ -113,12 +131,12 @@ const TransactionList =  () => {
                     {item.status}
                   </span>
                 </td> */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {formatDate(item.created_at)}
-                </td>
+                </td> */}
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                   <Link
-                    to={`/news/edit/${item.id}`}
+                    to={`/transaction/update/${item.id}`}
                     className="text-blue-600 hover:text-blue-900"
                   >
                     <Edit className="h-4 w-4 inline" />
@@ -134,10 +152,10 @@ const TransactionList =  () => {
             ))}
           </tbody>
         </table>
-        
-        {filteredNews.length === 0 && (
+
+        {filteredTransaction.length === 0 && (
           <div className="text-center py-8 text-gray-500">
-            No news articles found.
+            No transaction articles found.
           </div>
         )}
       </div>

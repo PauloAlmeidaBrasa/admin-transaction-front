@@ -87,7 +87,7 @@ api.interceptors.response.use(
 
 export const adminAPIAuth = {
   getLogin: async (credentials) => {
-    return  api.post(getApiUrl('login'),credentials,{withCredentials:true}).then((res) => {
+    return  api.post(getApiUrl('authentication'),credentials,{withCredentials:true}).then((res) => {
 
       return res.data;
     })
@@ -120,7 +120,7 @@ export const adminAPIUser = {
 
 export const adminAPITransaction = {
   getAll: async () => {
-    return api.get(getApiUrl('/transactions')) 
+    return api.get(getApiUrl('transactions')) 
   },
   getById: async (newsId) => {
     return api.get(getApiUrl('news/get-news'), {

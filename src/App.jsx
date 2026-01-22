@@ -22,17 +22,16 @@ const theme = createTheme({
 });
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(null);
-
-  // const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = React.useState(!!localStorage.getItem("auth"));
 
   React.useEffect(() => {
-    setIsAuthenticated(!!localStorage.getItem("auth"));
-  }, [location]);
+    const handleAuthChange = () => {
+      setIsAuthenticated(!!localStorage.getItem("auth"));
+    };
 
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;  
-  }
+    window.addEventListener('authChange', handleAuthChange);
+    return () => window.removeEventListener('authChange', handleAuthChange);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -65,36 +64,5 @@ function App() {
     </ThemeProvider>
   );
 }
-
-
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
 
 export default App
