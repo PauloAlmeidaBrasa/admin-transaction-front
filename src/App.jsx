@@ -7,6 +7,8 @@ import Dashboard from './pages/dashboard';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/layout';
+import Login from './pages/login/login';
+import TransactionList from './pages/transactions/transactionList'
 
 
 
@@ -46,7 +48,7 @@ function App() {
         {isAuthenticated && (
           <>
             <Route path="/" element={<Layout><Dashboard /></Layout>} />
-            {/* <Route path="/news" element={<Layout><NewsList /></Layout>} /> */}
+            <Route path="/transactions" element={<Layout><TransactionList /></Layout>} />
             {/* <Route path="/news/create" element={<Layout><NewsCreate /></Layout>} /> */}
             {/* <Route path="/news/edit/:id" element={<Layout><NewsEdit /></Layout>} /> */}
             {/* <Route path="/category" element={<Layout><CategoryList /></Layout>} /> */}

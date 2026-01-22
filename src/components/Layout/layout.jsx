@@ -22,7 +22,7 @@ import {
   Logout as LogoutIcon,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useLogout } from '../../hooks/useAuth'
+import { useLogout } from '../../hooks/useAuth.js'
 
 const drawerWidth = 240;
 
@@ -58,10 +58,10 @@ const Layout = ({ children }) => {
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-    { text: 'News', icon: <NewsIcon />, path: '/news' },
-    { text: 'Create News', icon: <AddIcon />, path: '/news/create' },
-    { text: 'Category', icon: <AddIcon />, path: '/category' },
-    { text: 'Users', icon: <AddIcon />, path: '/user' },
+    { text: 'Transactions', icon: <NewsIcon />, path: '/news' },
+    // { text: 'Create News', icon: <AddIcon />, path: '/news/create' },
+    // { text: 'Category', icon: <AddIcon />, path: '/category' },
+    // { text: 'Users', icon: <AddIcon />, path: '/user' },
   ];
 
   return (
