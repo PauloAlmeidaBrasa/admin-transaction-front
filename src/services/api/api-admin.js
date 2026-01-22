@@ -1,7 +1,7 @@
 
 
 import axios from 'axios';
-import { getApiUrl } from '../Utils/env';
+import { getApiUrl } from '../../utils/env';
 
 
 const api = axios.create({
