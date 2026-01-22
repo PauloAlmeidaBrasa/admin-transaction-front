@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { newsAPIAuth } from '../services/api/api-admin';
+import { adminAPIAuth } from '../services/api/api-admin';
 
 
 export const useLogin = (options = {}) => {
@@ -28,26 +28,38 @@ export const useLogin = (options = {}) => {
 };
 
 export const useLogout = (options = {}) => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
-  const logout = () => {
-    localStorage.removeItem('auth');
-    localStorage.removeItem('user');
+  return () => {
+    localStorage.removeItem('auth')
+    localStorage.removeItem('user')
 
-    queryClient.clear();
+    queryClient.clear()
 
-    onSuccess: (data) => {
+    options.onSuccess?.()
+}
 
-    queryClient.invalidateQueries(['user']);
+// export const useLogout = (options = {}) => {
+//   const queryClient = useQueryClient();
 
-      if (options.onSuccess) {
-        options.onSuccess(data);
-      }
+//   const logout = () => {
+//     localStorage.removeItem('auth');
+//     localStorage.removeItem('user');
 
-    }
-  };
+//     queryClient.clear();
 
-  return logout;
+//     onSuccess: (data) => {
+
+//     queryClient.invalidateQueries(['user']);
+
+//       if (options.onSuccess) {
+//         options.onSuccess(data);
+//       }
+
+//     }
+//   };
+
+//   return logout;
 };
 
 export const authenticated = () => {
@@ -62,5 +74,5 @@ export const authenticated = () => {
 export const login = async (credentials) => { 
 
   console.log(credentials)
-  return await newsAPIAuth.getLogin(credentials)
+  return await adminAPIAuth.getLogin(credentials)
 }

@@ -1,7 +1,7 @@
 
 
 import axios from 'axios';
-import { getApiUrl } from '../Utils/env';
+import { getApiUrl } from '../../utils/env';
 
 
 const api = axios.create({
@@ -12,7 +12,6 @@ const api = axios.create({
   withCredentials: true
 });
 
-// a promise queue to prevent multiple refreshes at once
 let isRefreshing = false;
 let refreshSubscribers = [];
 
@@ -86,7 +85,7 @@ api.interceptors.response.use(
   }
 );
 
-export const newsAPIAuth = {
+export const adminAPIAuth = {
   getLogin: async (credentials) => {
     return  api.post(getApiUrl('login'),credentials,{withCredentials:true}).then((res) => {
 
@@ -100,7 +99,7 @@ export const newsAPI = {
 };
 
 
-export const newsAPIUser = {
+export const adminAPIUser = {
   getAll: async () => {
     return api.get(getApiUrl('user/get-users')) 
   },
@@ -119,9 +118,9 @@ export const newsAPIUser = {
 };
 
 
-export const newsAPINews = {
+export const adminAPITransaction = {
   getAll: async () => {
-    return api.get(getApiUrl('news/get-news')) 
+    return api.get(getApiUrl('/transactions')) 
   },
   getById: async (newsId) => {
     return api.get(getApiUrl('news/get-news'), {
@@ -134,18 +133,18 @@ export const newsAPINews = {
   },
   delete: (id) => api.post(getApiUrl('news/delete'),{news_ID: id}),
 };
-export const newsAPICategory = {
-  getAll: () => api.get(getApiUrl('category/get-category')),
-  getById: (payload) => {
-    return api.get(getApiUrl('category/get-category'), {
-      params: {category_ID: payload}
-    })
-  },
-  add: (data) =>api.post(getApiUrl('category/add-category'), data),
-  update: async (payload) => {
-    return api.patch(getApiUrl(`category/update/${payload.id}`), payload.payload)
-  },
-  delete: (id) => api.post(getApiUrl('category/delete'),{category_ID: id}),
-};
+// export const newsAPICategory = {
+//   getAll: () => api.get(getApiUrl('category/get-category')),
+//   getById: (payload) => {
+//     return api.get(getApiUrl('category/get-category'), {
+//       params: {category_ID: payload}
+//     })
+//   },
+//   add: (data) =>api.post(getApiUrl('category/add-category'), data),
+//   update: async (payload) => {
+//     return api.patch(getApiUrl(`category/update/${payload.id}`), payload.payload)
+//   },
+//   delete: (id) => api.post(getApiUrl('category/delete'),{category_ID: id}),
+// };
 
 export default api;

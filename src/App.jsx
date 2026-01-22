@@ -1,12 +1,14 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+// import { useState } from 'react'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
 import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-// import { useLocation } from 'react-router-dom';
+import Dashboard from './pages/dashboard';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/layout';
+import Login from './pages/login/login';
+import TransactionList from './pages/transactions/transactionList'
 
 
 
@@ -46,15 +48,15 @@ function App() {
         {isAuthenticated && (
           <>
             <Route path="/" element={<Layout><Dashboard /></Layout>} />
-            <Route path="/news" element={<Layout><NewsList /></Layout>} />
-            <Route path="/news/create" element={<Layout><NewsCreate /></Layout>} />
-            <Route path="/news/edit/:id" element={<Layout><NewsEdit /></Layout>} />
-            <Route path="/category" element={<Layout><CategoryList /></Layout>} />
-            <Route path="/category/edit/:id" element={<Layout><CategoryEdit /></Layout>} />
-            <Route path="/category/add-category" element={<Layout><CategoryCreate /></Layout>} />
-            <Route path="/user" element={<Layout><UserList /></Layout>} />
-            <Route path="/user/create" element={<Layout><UserCreate /></Layout>} />
-            <Route path="/user/edit/:id" element={<Layout><UserEdit /></Layout>} />
+            <Route path="/transactions" element={<Layout><TransactionList /></Layout>} />
+            {/* <Route path="/news/create" element={<Layout><NewsCreate /></Layout>} /> */}
+            {/* <Route path="/news/edit/:id" element={<Layout><NewsEdit /></Layout>} /> */}
+            {/* <Route path="/category" element={<Layout><CategoryList /></Layout>} /> */}
+            {/* <Route path="/category/edit/:id" element={<Layout><CategoryEdit /></Layout>} /> */}
+            {/* <Route path="/category/add-category" element={<Layout><CategoryCreate /></Layout>} /> */}
+            {/* <Route path="/user" element={<Layout><UserList /></Layout>} /> */}
+            {/* <Route path="/user/create" element={<Layout><UserCreate /></Layout>} /> */}
+            {/* <Route path="/user/edit/:id" element={<Layout><UserEdit /></Layout>} /> */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}
