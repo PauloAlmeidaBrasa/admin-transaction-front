@@ -26,7 +26,7 @@ export const useTransactionList = () => {
     queryFn: () => adminAPITransaction.getAll(),
   }); 
 };
-export const useTransactionListUser = (id) => {
+export function useTransactionListUser (id) {
   const queryClient = useQueryClient();
   return useQuery({
     queryFn: () => adminAPITransaction.getByUserId(id),
