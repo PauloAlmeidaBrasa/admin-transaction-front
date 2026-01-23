@@ -71,7 +71,7 @@ const Layout = ({ children }) => {
   // Define all menu items with their required access levels
   const allMenuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/', requiredLevel: [1, 2] },
-    { text: 'Transactions', icon: <NewsIcon />, path: '/transactions', requiredLevel: [1] },
+    { text: 'Transactions', icon: <NewsIcon />, path: '/transactions', requiredLevel: [1,2] },
     { text: 'Upload', icon: <CloudUploadIcon />, path: '/upload', requiredLevel: [1] },
   ];
 

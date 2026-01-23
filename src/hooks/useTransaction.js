@@ -15,6 +15,16 @@ export const useTransactionList = () => {
   return useQuery({
     queryKey: ['transaction-list'],
     queryFn: () => adminAPITransaction.getAll(),
+  }); 
+};
+export const useTransactionListUser = (id) => {
+  const queryClient = useQueryClient();
+  return useQuery({
+    queryFn: () => adminAPITransaction.getByUserId(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['transaction-list']);
+    },
+    enabled: !!id,
   });
 };
 

@@ -126,10 +126,15 @@ export const adminAPITransaction = {
     return api.get(getApiUrl(`transaction/${transactionId}`), {
     })
   },
-  // add: (data) =>api.post(getApiUrl('/add'), data),
+  getByUserId: async (userId) => {
+    return api.get(getApiUrl('transactions'), {
+      params: { user_ID: userId }
+    })
+  },
   update: async (id,data) => {
     return api.patch(getApiUrl(`transaction/update/${id}`), data)
   },
+  
   delete: (id) => api.post(getApiUrl(`transaction/delete/${id}`)),
   upload: async (file) => {
     const formData = new FormData();
