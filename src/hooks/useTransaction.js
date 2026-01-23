@@ -10,6 +10,15 @@ export const formatDate = (dateStr) => {
   }).format(date);
 };
 
+export const formatStatus = (status) => {
+  const statusMap = {
+    '1': 'Analisando',
+    '2': 'Reprovado',
+    '3': 'Aprovado',
+  };
+  return statusMap[String(status)] || status;
+};
+
 
 export const useTransactionList = () => {
   return useQuery({

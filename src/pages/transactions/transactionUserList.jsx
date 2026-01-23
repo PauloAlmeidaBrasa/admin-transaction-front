@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Edit, Trash2, Search } from 'lucide-react'
-import { useTransactionListUser, useDeleteTransaction, formatDate } from "../../hooks/useTransaction"
+import { useTransactionListUser, useDeleteTransaction, formatDate, formatStatus } from "../../hooks/useTransaction"
 import {
   Container,
   Box,
@@ -103,7 +103,7 @@ const TransactionUserList = () => {
               <TableCell>Value</TableCell>
               <TableCell>Points</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              {/* <TableCell align="right">Actions</TableCell> */}
             </TableRow>
           </TableHead>
 
@@ -115,8 +115,8 @@ const TransactionUserList = () => {
                 <TableCell>{tx.desc_transaction || '-'}</TableCell>
                 <TableCell>{tx.value || '-'}</TableCell>
                 <TableCell>{tx.value_in_points || '-'}</TableCell>
-                <TableCell>{tx.status || '-'}</TableCell>
-                <TableCell align="right">
+                <TableCell>{tx.status ? formatStatus(tx.status) : '-'}</TableCell>
+                {/* <TableCell align="right">
                   <IconButton 
                     color="primary" 
                     component={Link} 
@@ -132,7 +132,7 @@ const TransactionUserList = () => {
                   >
                     <Trash2 size={20} />
                   </IconButton>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             ))}
           </TableBody>
