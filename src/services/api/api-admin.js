@@ -145,6 +145,12 @@ export const adminAPITransaction = {
       },
     });
   },
+  getByDateRange: async (startDate, endDate) => {
+    return api.post(getApiUrl('transaction/by-date'), {
+      start_date: startDate,
+      end_date: endDate
+    })
+  }
 };
 
 

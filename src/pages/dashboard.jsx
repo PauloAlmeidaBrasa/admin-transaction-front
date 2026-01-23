@@ -11,8 +11,8 @@ import {
   TrendingUp as TrendingIcon,
   People as PeopleIcon,
 } from '@mui/icons-material';
-import { useQuery } from '@tanstack/react-query';
-import { newsAPI } from '../services/api/api-admin';
+import { useTransactionList } from '../hooks/useTransaction';
+
 
 const StatCard = ({ title, value, icon, color }) => (
   <Card>
@@ -35,27 +35,24 @@ const StatCard = ({ title, value, icon, color }) => (
 );
 
 const Dashboard = () => {
-  const { data: news, isLoading } = useQuery({ 
-    queryKey: ['news'], 
-    queryFn: () => newsAPI.getAll() 
-  });
+  const { data: transactions, isLoading, error } = useTransactionList();
 
   const stats = [
     {
-      title: 'Total News',
-      value: news?.data?.length || 0,
+      title: 'Total Transactions',
+      value: transactions?.transactions?.length || 0,
       icon: <ArticleIcon fontSize="inherit" />,
       color: '#1976d2',
     },
     {
       title: 'Published',
-      value: news?.data?.filter(item => item.status === 'published').length || 0,
+      value: transactions?.transactions?.filter(item => item.status === 'published').length || 0,
       icon: <TrendingIcon fontSize="inherit" />,
       color: '#2e7d32',
     },
     {
       title: 'Drafts',
-      value: news?.data?.filter(item => item.status === 'draft').length || 0,
+      value: transactions?.transactions?.filter(item => item.status === 'draft').length || 0,
       icon: <PeopleIcon fontSize="inherit" />,
       color: '#ed6c02',
     },

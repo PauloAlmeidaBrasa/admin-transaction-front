@@ -26,7 +26,7 @@ export const useTransactionList = () => {
     queryFn: () => adminAPITransaction.getAll(),
   }); 
 };
-export const useTransactionListUser = (id) => {
+export function useTransactionListUser (id) {
   const queryClient = useQueryClient();
   return useQuery({
     queryFn: () => adminAPITransaction.getByUserId(id),
@@ -68,3 +68,17 @@ export const useTransactionById = (id) => {
     enabled: !!id,
   });
 };
+
+export const useTransactionByDateRange = (startDate, endDate) => {
+  const queryClient = useQueryClient();
+  return useQuery({
+    queryKey: ['transaction-date-range', startDate, endDate],
+    queryFn: () => adminAPITransaction.getByDateRange(startDate, endDate),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['transaction-list']);
+    },
+    enabled: !!startDate && !!endDate,
+  });
+};
+
+export default useTransactionListUser;

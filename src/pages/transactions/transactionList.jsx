@@ -17,6 +17,7 @@ import {
   TextField,
   InputAdornment // Add this import
 } from '@mui/material';
+import TransactionSearch from '../../components/TransactionSearch/TransactionSearch';
 
 const TransactionList = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -65,21 +66,32 @@ const TransactionList = () => {
       <Typography variant="h4" gutterBottom>
         Transaction Management
       </Typography>
+      
+      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+        {/* Left side - Search box */}
+        <Box sx={{ flex: '1' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <TextField
+              size="small"
+              placeholder="Search transaction..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search size={20} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ width: '100%', maxWidth: '400px' }}
+            />
+          </Box>
+        </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-        <TextField
-          size="small"
-          placeholder="Search transaction..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search size={20} />
-              </InputAdornment>
-            ),
-          }}
-        />
+        {/* Right side - Date range search */}
+        <Box sx={{ flex: '0 0 350px', borderLeft: '1px solid #e0e0e0', pl: 2 }}>
+          <TransactionSearch />
+        </Box>
       </Box>
 
       <TableContainer component={Paper}>
