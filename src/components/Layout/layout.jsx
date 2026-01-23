@@ -20,6 +20,7 @@ import {
   Article as NewsIcon,
   Add as AddIcon,
   Logout as LogoutIcon,
+  CloudUpload as CloudUploadIcon,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLogout } from '../../hooks/useAuth.js'
@@ -58,10 +59,9 @@ const Layout = ({ children }) => {
 
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-    { text: 'Transactions', icon: <NewsIcon />, path: '/news' },
-    // { text: 'Create News', icon: <AddIcon />, path: '/news/create' },
-    // { text: 'Category', icon: <AddIcon />, path: '/category' },
-    // { text: 'Users', icon: <AddIcon />, path: '/user' },
+    { text: 'Transactions', icon: <NewsIcon />, path: '/Transactions' },
+    { text: 'Upload', icon: <CloudUploadIcon />, path: '/upload' },,
+    { text: 'Users', icon: <AddIcon />, path: '/user' },
   ];
 
   return (

@@ -131,6 +131,15 @@ export const adminAPITransaction = {
     return api.patch(getApiUrl(`transaction/update/${id}`), data)
   },
   delete: (id) => api.post(getApiUrl(`transaction/delete/${id}`)),
+  upload: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post(getApiUrl('transaction/upload'), formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 };
 
 
