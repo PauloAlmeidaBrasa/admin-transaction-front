@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useTransactionByDateRange } from '../../hooks/useTransaction';
+import { useQueryClient } from '@tanstack/react-query';
 
 const TransactionSearch = () => {
   const [startDate, setStartDate] = useState('');
@@ -19,21 +20,43 @@ const TransactionSearch = () => {
     search ? searchParams.start : null,
     search ? searchParams.end : null
   );
+  const queryClient = useQueryClient();
+
+  // When the by-date query returns, write a normalized shape into the main list cache
+  useEffect(() => {
+    if (!transactions) return;
+
+    const resp = transactions?.data;
+    const transactionsArray = resp?.transactions || resp?.transaction || (Array.isArray(resp) ? resp : null);
+
+    if (transactionsArray) {
+      queryClient.setQueryData(['transaction-list'], { data: { transactions: transactionsArray } });
+    }
+  }, [transactions, queryClient]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    
-    if (!startDate || !endDate) {
+    const s = startDate?.toString().trim();
+    const eDate = endDate?.toString().trim();
+
+    if (!s || !eDate) {
       alert('Please fill in both date fields');
       return;
     }
 
-    if (new Date(startDate) > new Date(endDate)) {
+    const sTime = Date.parse(s);
+    const eTime = Date.parse(eDate);
+    if (Number.isNaN(sTime) || Number.isNaN(eTime)) {
+      alert('Invalid date format. Use YYYY-MM-DD');
+      return;
+    }
+
+    if (sTime > eTime) {
       alert('Start date must be before end date');
       return;
     }
 
-    setSearchParams({ start: startDate, end: endDate });
+    setSearchParams({ start: s, end: eDate });
     setSearch(true);
   };
 
@@ -101,18 +124,12 @@ const TransactionSearch = () => {
         </Box>
       )}
 
-      {search && !isLoading && transactions?.transactions && transactions.transactions.length > 0 && (
+      {search && !isLoading && ((transactions?.data?.transactions && transactions.data.transactions.length > 0) || (transactions?.data?.transaction && transactions.data.transaction.length > 0)) && (
         <Box sx={{ mt: 1, p: 1, backgroundColor: '#f5f5f5', borderRadius: 1 }}>
           <Typography variant="caption" sx={{ fontWeight: 'bold', display: 'block', mb: 1 }}>
-            Found: {transactions.transactions.length} transaction(s)
+            Found: {transactions.data?.transactions?.length ?? transactions.data?.transaction?.length ?? 0} transaction(s)
           </Typography>
         </Box>
-      )}
-
-      {search && !isLoading && (!transactions?.transactions || transactions.transactions.length === 0) && (
-        <Alert severity="info" sx={{ mt: 1, fontSize: '0.85rem' }}>
-          No transactions found
-        </Alert>
       )}
     </Box>
   );
