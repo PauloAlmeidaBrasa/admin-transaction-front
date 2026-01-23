@@ -122,29 +122,16 @@ export const adminAPITransaction = {
   getAll: async () => {
     return api.get(getApiUrl('transactions')) 
   },
-  getById: async (newsId) => {
-    return api.get(getApiUrl('news/get-news'), {
-      params: { news_ID: newsId }
+  getById: async (transactionId) => {
+    return api.get(getApiUrl(`transaction/${transactionId}`), {
     })
   },
-  add: (data) =>api.post(getApiUrl('news/add-news'), data),
+  // add: (data) =>api.post(getApiUrl('/add'), data),
   update: async (id,data) => {
-    return api.patch(getApiUrl(`news/update/${id}`), data)
+    return api.patch(getApiUrl(`transaction/update/${id}`), data)
   },
-  delete: (id) => api.post(getApiUrl('news/delete'),{news_ID: id}),
+  delete: (id) => api.post(getApiUrl(`transaction/delete/${id}`)),
 };
-// export const newsAPICategory = {
-//   getAll: () => api.get(getApiUrl('category/get-category')),
-//   getById: (payload) => {
-//     return api.get(getApiUrl('category/get-category'), {
-//       params: {category_ID: payload}
-//     })
-//   },
-//   add: (data) =>api.post(getApiUrl('category/add-category'), data),
-//   update: async (payload) => {
-//     return api.patch(getApiUrl(`category/update/${payload.id}`), payload.payload)
-//   },
-//   delete: (id) => api.post(getApiUrl('category/delete'),{category_ID: id}),
-// };
+
 
 export default api;

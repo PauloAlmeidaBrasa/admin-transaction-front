@@ -9,6 +9,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/layout';
 import Login from './pages/login/login';
 import TransactionList from './pages/transactions/transactionList'
+import TransactionEdit from './pages/transactions/transactionEdit';
 
 
 
@@ -49,7 +50,7 @@ function App() {
             <Route path="/" element={<Layout><Dashboard /></Layout>} />
             <Route path="/transactions" element={<Layout><TransactionList /></Layout>} />
             {/* <Route path="/news/create" element={<Layout><NewsCreate /></Layout>} /> */}
-            {/* <Route path="/news/edit/:id" element={<Layout><NewsEdit /></Layout>} /> */}
+            <Route path="/transaction/update/:id" element={<Layout><TransactionEdit /></Layout>} />
             {/* <Route path="/category" element={<Layout><CategoryList /></Layout>} /> */}
             {/* <Route path="/category/edit/:id" element={<Layout><CategoryEdit /></Layout>} /> */}
             {/* <Route path="/category/add-category" element={<Layout><CategoryCreate /></Layout>} /> */}

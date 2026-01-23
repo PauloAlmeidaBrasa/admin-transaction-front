@@ -14,7 +14,7 @@ export const formatDate = (dateStr) => {
 export const useTransactionList = () => {
   return useQuery({
     queryKey: ['transaction-list'],
-    queryFn: () => adminAPITransaction.getAll(), // GET /news
+    queryFn: () => adminAPITransaction.getAll(),
   });
 };
 
@@ -24,8 +24,28 @@ export function useDeleteTransaction() {
   return useMutation({
     mutationFn: (id) => adminAPITransaction.delete(id),
     onSuccess: () => {
-      // Refresh the table after deletion
       queryClient.invalidateQueries(['transaction-list']);
     },
   })
 }
+export const useUpdateTransaction = (options = {}) => {
+  const queryClient = useQueryClient();
+
+
+  return useMutation({
+    mutationFn: ({ id, payload }) => adminAPITransaction.update(id, payload),
+    onSuccess: (...args) => {
+      if (options.onSuccess) {
+        options.onSuccess(...args);
+      }
+      queryClient.invalidateQueries(['news-list']);
+    },
+  });
+}
+export const useTransactionById = (id) => {
+  return useQuery({
+    queryKey: ['transaction', id],
+    queryFn: () => adminAPITransaction.getById(id),
+    enabled: !!id,
+  });
+};

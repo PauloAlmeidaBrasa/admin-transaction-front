@@ -20,7 +20,7 @@ import {
 
 const TransactionList = () => {
   const [searchTerm, setSearchTerm] = useState('')
-  const { data: transactionList, isLoading } = useTransactionList();
+  const { data: transactionList, isLoading, error } = useTransactionList();
   const deleteTransactions = useDeleteTransaction();
 
   const handleDelete = (transactionId) => {
@@ -30,7 +30,7 @@ const TransactionList = () => {
   };
 
   let amountTransaction = transactionList?.data?.data || transactionList?.data?.transactions || transactionList?.data
-  let filteredTransaction
+  let filteredTransaction = []
 
   if(amountTransaction && Array.isArray(amountTransaction)) {
       filteredTransaction = amountTransaction.filter(item => {
@@ -40,8 +40,6 @@ const TransactionList = () => {
         
         return cpfMatch || descMatch || userMatch
       })
-  } else {
-    filteredTransaction = []
   }
 
   if (isLoading) {
@@ -49,6 +47,16 @@ const TransactionList = () => {
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="xl">
+        <Typography color="error" variant="h6">
+          Error loading transactions: {error.message}
+        </Typography>
+      </Container>
     )
   }
 
@@ -92,13 +100,13 @@ const TransactionList = () => {
           <TableBody>
             {filteredTransaction.map((tx) => (
               <TableRow key={tx.id}>
-                <TableCell>{tx.ID_user}</TableCell>
-                <TableCell>{tx.date_transaction}</TableCell>
-                <TableCell>{tx.desc_transaction}</TableCell>
-                <TableCell>{tx.id_user_transaction}</TableCell>
-                <TableCell>{tx.value}</TableCell>
-                <TableCell>{tx.value_in_points}</TableCell>
-                <TableCell>{tx.status}</TableCell>
+                <TableCell>{tx.ID_user || '-'}</TableCell>
+                <TableCell>{tx.date_transaction ? formatDate(tx.date_transaction) : '-'}</TableCell>
+                <TableCell>{tx.desc_transaction || '-'}</TableCell>
+                <TableCell>{tx.id_user_transaction || '-'}</TableCell>
+                <TableCell>{tx.value || '-'}</TableCell>
+                <TableCell>{tx.value_in_points || '-'}</TableCell>
+                <TableCell>{tx.status || '-'}</TableCell>
                 <TableCell align="right">
                   <IconButton 
                     color="primary" 
