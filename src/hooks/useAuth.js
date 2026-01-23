@@ -46,27 +46,7 @@ export const useLogout = (options = {}) => {
     options.onSuccess?.()
 }
 
-// export const useLogout = (options = {}) => {
-//   const queryClient = useQueryClient();
 
-//   const logout = () => {
-//     localStorage.removeItem('auth');
-//     localStorage.removeItem('user');
-
-//     queryClient.clear();
-
-//     onSuccess: (data) => {
-
-//     queryClient.invalidateQueries(['user']);
-
-//       if (options.onSuccess) {
-//         options.onSuccess(data);
-//       }
-
-//     }
-//   };
-
-//   return logout;
 };
 
 export const authenticated = () => {

@@ -25,8 +25,16 @@ const Login = () => {
   const [errors, setErrors] = useState({});
 
   const { mutate: login, isLoading, isError, error } = useLogin({
-    onSuccess: () => {
-      navigate('/transactions')
+    onSuccess: (data) => {
+      // Redirect based on access level
+      const accessLevel = data.user?.access_level || 1;
+      if (accessLevel === 1) {
+        navigate('/transactions');
+      } else if (accessLevel === 2) {
+        navigate('/transaction-user');
+      } else {
+        navigate('/');
+      }
     }
   });
 

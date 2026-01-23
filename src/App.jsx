@@ -9,6 +9,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/layout';
 import Login from './pages/login/login';
 import TransactionList from './pages/transactions/transactionList'
+import TransactionUserList from './pages/transactions/transactionUserList'
 import TransactionEdit from './pages/transactions/transactionEdit';
 import Upload from './pages/upload/upload';
 
@@ -50,10 +51,11 @@ function App() {
           <>
             <Route path="/" element={<Layout><Dashboard /></Layout>} />
             <Route path="/transactions" element={<Layout><TransactionList /></Layout>} />
+            <Route path="/transaction-user" element={<Layout><TransactionUserList /></Layout>} />
             <Route path="/upload" element={<Layout><Upload /></Layout>} />
             {/* <Route path="/news/create" element={<Layout><NewsCreate /></Layout>} /> */}
             <Route path="/transaction/update/:id" element={<Layout><TransactionEdit /></Layout>} />
-            <Route path="*" element={<Navigate to="/transactions" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}
 
