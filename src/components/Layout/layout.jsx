@@ -48,8 +48,19 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 
 const Layout = ({ children }) => {
   const [open, setOpen] = useState(true);
+  const [accessLevel, setAccessLevel] = useState(localStorage.getItem('access_level') || 1);
   const navigate = useNavigate();
   const location = useLocation();
+
+  React.useEffect(() => {
+    const handleAuthChange = () => {
+      const level = localStorage.getItem('access_level') || 1;
+      setAccessLevel(level);
+    };
+
+    window.addEventListener('authChange', handleAuthChange);
+    return () => window.removeEventListener('authChange', handleAuthChange);
+  }, []);
 
   const logout = useLogout({
       onSuccess: (data) => {
@@ -57,12 +68,17 @@ const Layout = ({ children }) => {
     }
   })
 
-  const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
-    { text: 'Transactions', icon: <NewsIcon />, path: '/Transactions' },
-    { text: 'Upload', icon: <CloudUploadIcon />, path: '/upload' },,
-    { text: 'Users', icon: <AddIcon />, path: '/user' },
+  // Define all menu items with their required access levels
+  const allMenuItems = [
+    { text: 'Dashboard', icon: <DashboardIcon />, path: '/', requiredLevel: [1, 2] },
+    { text: 'Transactions', icon: <NewsIcon />, path: '/transactions', requiredLevel: [1] },
+    { text: 'Upload', icon: <CloudUploadIcon />, path: '/upload', requiredLevel: [1] },
   ];
+
+  // Filter menu items based on access level
+  const menuItems = allMenuItems.filter(item => 
+    item.requiredLevel.includes(parseInt(accessLevel))
+  );
 
   return (
     <Box sx={{ display: 'flex' }}>
