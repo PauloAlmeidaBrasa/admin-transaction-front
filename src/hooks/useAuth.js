@@ -6,7 +6,7 @@ export const useLogin = (options = {}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (credentials) => newsAPIAuth.getLogin(credentials),
+    mutationFn: (credentials) => adminAPIAuth.getLogin(credentials),
     onSuccess: (data) => {
 
 
@@ -14,6 +14,8 @@ export const useLogin = (options = {}) => {
       localStorage.setItem('user', JSON.stringify(data.user));
 
       queryClient.invalidateQueries(['user']);
+
+      window.dispatchEvent(new Event('authChange'));
 
       if (options.onSuccess) {
         options.onSuccess(data);
@@ -35,6 +37,9 @@ export const useLogout = (options = {}) => {
     localStorage.removeItem('user')
 
     queryClient.clear()
+
+    // Dispatch custom event to notify other parts of the app about auth change
+    window.dispatchEvent(new Event('authChange'));
 
     options.onSuccess?.()
 }

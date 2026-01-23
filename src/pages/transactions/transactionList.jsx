@@ -2,35 +2,44 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Edit, Trash2, Search } from 'lucide-react'
 import { useTransactionList, useDeleteTransaction, formatDate } from "../../hooks/useTransaction"
+import {
+  Container,
+  Box,
+  Typography,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
+  TextField,
+  InputAdornment // Add this import
+} from '@mui/material';
 
-
-const TransactionList =  () => {
-
+const TransactionList = () => {
   const [searchTerm, setSearchTerm] = useState('')
-  const { data: newsList, isLoading } = useTransactionList();
+  const { data: transactionList, isLoading, error } = useTransactionList();
+  const deleteTransactions = useDeleteTransaction();
 
-  const deleteNews = useDeleteNews();
-
-  const handleDelete = (newsId) => {
-    if (confirm("Are you sure you want to delete this news?")) {
-      deleteNews.mutate(newsId);
+  const handleDelete = (transactionId) => {
+    if (confirm("Are you sure you want to delete this transaction?")) {
+      deleteTransactions.mutate(transactionId);
     }
   };
 
+  let amountTransaction = transactionList?.data?.data || transactionList?.data?.transactions || transactionList?.data
+  let filteredTransaction = []
 
-  let amountNews = newsList?.data?.data?.news
-  let filteredNews
-
-  if(Array.isArray(amountNews)) {
-      filteredNews = amountNews.filter(item => {
-
-      const titleMatch = item?.title?.toLowerCase().includes(searchTerm.toLowerCase())
-      const textMatch = item?.text?.toLowerCase().includes(searchTerm.toLowerCase())
-      
-      return titleMatch || textMatch
-    })
-  } else {
-    filteredNews = []
+  if(amountTransaction && Array.isArray(amountTransaction)) {
+      filteredTransaction = amountTransaction.filter(item => {
+        const cpfMatch = item?.ID_user?.toString().includes(searchTerm)
+        const descMatch = item?.desc_transaction?.toLowerCase().includes(searchTerm.toLowerCase())
+        const userMatch = item?.id_user_transaction?.toString().includes(searchTerm)
+        
+        return cpfMatch || descMatch || userMatch
+      })
   }
 
   if (isLoading) {
@@ -41,109 +50,85 @@ const TransactionList =  () => {
     )
   }
 
+  if (error) {
+    return (
+      <Container maxWidth="xl">
+        <Typography color="error" variant="h6">
+          Error loading transactions: {error.message}
+        </Typography>
+      </Container>
+    )
+  }
+
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">News Management</h1>
-        <Link
-          to="/news/create"
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-        >
-          Create News
-        </Link>
-      </div>
+    <Container maxWidth="xl">
+      <Typography variant="h4" gutterBottom>
+        Transaction Management
+      </Typography>
 
-      {/* Search Bar */}
-      <div className="bg-white rounded-lg shadow p-4 mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-          <input
-            type="text"
-            placeholder="Search news..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <TextField
+          size="small"
+          placeholder="Search transaction..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search size={20} />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
 
-      {/* News Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Title
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                subtitle
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                content
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date Created
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {filteredNews.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{item.title}</div>
-                  {/* <div className="text-sm text-gray-500 truncate max-w-xs">
-                    {item.content}
-                  </div> */}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{item.subtitle}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{item.text}</div>
-                </td>
-                {/* <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    item.status === 'published' 
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {item.status}
-                  </span>
-                </td> */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatDate(item.created_at)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                  <Link
-                    to={`/news/edit/${item.id}`}
-                    className="text-blue-600 hover:text-blue-900"
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>CPF</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>User</TableCell>
+              <TableCell>Value</TableCell>
+              <TableCell>Points</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {filteredTransaction.map((tx) => (
+              <TableRow key={tx.id}>
+                <TableCell>{tx.ID_user || '-'}</TableCell>
+                <TableCell>{tx.date_transaction ? formatDate(tx.date_transaction) : '-'}</TableCell>
+                <TableCell>{tx.desc_transaction || '-'}</TableCell>
+                <TableCell>{tx.id_user_transaction || '-'}</TableCell>
+                <TableCell>{tx.value || '-'}</TableCell>
+                <TableCell>{tx.value_in_points || '-'}</TableCell>
+                <TableCell>{tx.status || '-'}</TableCell>
+                <TableCell align="right">
+                  <IconButton 
+                    color="primary" 
+                    component={Link} 
+                    to={`/transaction/update/${tx.id}`}
                   >
-                    <Edit className="h-4 w-4 inline" />
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="text-red-600 hover:text-red-900"
+                    <Edit size={20} />
+                  </IconButton>
+                  <IconButton 
+                    color="error"
+                    onClick={() => handleDelete(tx.id)}
                   >
-                    <Trash2 className="h-4 w-4 inline" />
-                  </button>
-                </td>
-              </tr>
+                    <Trash2 size={20} />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-        
-        {filteredNews.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            No news articles found.
-          </div>
-        )}
-      </div>
-    </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   )
-
 }
 
 export default TransactionList

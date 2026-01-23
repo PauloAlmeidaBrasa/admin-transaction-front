@@ -9,6 +9,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout/layout';
 import Login from './pages/login/login';
 import TransactionList from './pages/transactions/transactionList'
+import TransactionEdit from './pages/transactions/transactionEdit';
 
 
 
@@ -22,17 +23,16 @@ const theme = createTheme({
 });
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(null);
-
-  // const location = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = React.useState(!!localStorage.getItem("auth"));
 
   React.useEffect(() => {
-    setIsAuthenticated(!!localStorage.getItem("auth"));
-  }, [location]);
+    const handleAuthChange = () => {
+      setIsAuthenticated(!!localStorage.getItem("auth"));
+    };
 
-  if (isAuthenticated === null) {
-    return <div>Loading...</div>;  
-  }
+    window.addEventListener('authChange', handleAuthChange);
+    return () => window.removeEventListener('authChange', handleAuthChange);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -50,7 +50,7 @@ function App() {
             <Route path="/" element={<Layout><Dashboard /></Layout>} />
             <Route path="/transactions" element={<Layout><TransactionList /></Layout>} />
             {/* <Route path="/news/create" element={<Layout><NewsCreate /></Layout>} /> */}
-            {/* <Route path="/news/edit/:id" element={<Layout><NewsEdit /></Layout>} /> */}
+            <Route path="/transaction/update/:id" element={<Layout><TransactionEdit /></Layout>} />
             {/* <Route path="/category" element={<Layout><CategoryList /></Layout>} /> */}
             {/* <Route path="/category/edit/:id" element={<Layout><CategoryEdit /></Layout>} /> */}
             {/* <Route path="/category/add-category" element={<Layout><CategoryCreate /></Layout>} /> */}
@@ -65,36 +65,5 @@ function App() {
     </ThemeProvider>
   );
 }
-
-
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
 
 export default App
