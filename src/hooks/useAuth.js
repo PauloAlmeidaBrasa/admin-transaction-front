@@ -12,6 +12,7 @@ export const useLogin = (options = {}) => {
 
       localStorage.setItem('auth', data.access_token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('access_level', data.user?.access_level || 1);
 
       queryClient.invalidateQueries(['user']);
 
@@ -35,6 +36,7 @@ export const useLogout = (options = {}) => {
   return () => {
     localStorage.removeItem('auth')
     localStorage.removeItem('user')
+    localStorage.removeItem('access_level')
 
     queryClient.clear()
 
@@ -73,6 +75,10 @@ export const authenticated = () => {
 
   return localStorage.getItem('auth')
 
+} 
+
+export const getAccessLevel = () => {
+  return parseInt(localStorage.getItem('access_level') || 1);
 } 
 
 
